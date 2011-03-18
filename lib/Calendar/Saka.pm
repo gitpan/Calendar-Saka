@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Saka Calendar (Indian).
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Carp;
 use Readonly;
@@ -24,8 +24,8 @@ use Date::Calc qw/Delta_Days Day_of_Week Add_Delta_Days/;
 
 Readonly my $MONTHS =>
 [
-    'Caitra', 'Vaisakha', 'Jyaistha',   'Asadha', 'Sravana', 'Bhadra',
-    'Asvina', 'Kartika',  'Agrahayana', 'Pausa',  'Magha',   'Phalguna'
+    'Chaitra', 'Vaisakha', 'Jyaistha',   'Asadha', 'Sravana', 'Bhadra',
+    'Asvina',  'Kartika',  'Agrahayana', 'Pausa',  'Magha',   'Phalguna'
 ];
 
 Readonly my $DAYS => 
@@ -64,7 +64,7 @@ sub new
         $dd = $today->mday unless defined $dd;    
         ($yyyy, $mm, $dd) = $self->from_gregorian($yyyy, $mm, $dd);
     }
-    
+
     $self->{yyyy} = $yyyy;
     $self->{mm}   = $mm;
     $self->{dd}   = $dd;
@@ -74,36 +74,56 @@ sub new
 
 =head1 SYNOPSIS
 
-Module to play with Saka calendar mostly used in the South indian, Goa and Maharashatra. It have functionality
-to add/minus days, months and years to a Saka date. It can also converts Saka date to Gregorian/Julian date.
+Module to play with Saka calendar mostly used in the South indian, Goa and Maharashatra. It supports the
+functionality  to  add / minus days, months  and years to a Saka date. It can also converts Saka date to
+ Gregorian/Julian date.
 
-                            Phalguna [1932]
+The  Saka  eras  are  lunisolar  calendars, and feature annual cycles of twelve lunar months, each month
+divided  into  two  phases:  the  'bright half' (shukla) and the 'dark half' (krishna); these correspond
+respectively  to  the  periods  of the 'waxing' and the 'waning' of the moon. Thus, the period beginning
+from  the  first  day  after  the new moon and ending on the full moon day constitutes the shukla paksha
+or 'bright half' of the month; the period beginning from the day after the full moon until and including
+the next new moon day constitutes the krishna paksha or 'dark half' of the month.
 
-                    Sun  Mon  Tue  Wed  Thu  Fri  Sat
-                      1    2    3    4    5    6    7
-                      8    9   10   11   12   13   14
-                     15   16   17   18   19   20   21
-                     22   23   24   25   26   27   28
-                     29   30
+The  "year zero"  for the two calendars is different. In the Vikrama calendar, the zero year corresponds
+to 58 BCE, while in the Shalivahana calendar, it corresponds to 78 CE. The Saka calendar begins with the
+month of Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year. 
+
+Each month in the Shalivahana calendar begins with the 'bright half' and is followed by the 'dark half'.
+Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the new month begins on the
+day after that.
+
+A variant  of  the  Saka Calendar was reformed and standardized as the Indian National calendar in 1957.
+This official calendar follows the Shalivahan Shak calendar in beginning from  the  month of Chaitra and
+counting  years  with  78 CE being year zero. It features a constant number of days in every month (with
+leap years).
+
+            Phalguna [1932]
+
+    Sun  Mon  Tue  Wed  Thu  Fri  Sat
+      1    2    3    4    5    6    7
+      8    9   10   11   12   13   14
+     15   16   17   18   19   20   21
+     22   23   24   25   26   27   28
+     29   30
 
 =head1 METHODS
 
 =head2 as_string()
 
 Return Saka date in human readable format.
-    
+
     use strict; use warnings;
     use Calendar::Saka;
     
     my $saka = Calendar::Saka->new(1932,12,26);
     print "Saka date is " . $saka->as_string() . "\n";
-   
+
 =cut
 
 sub as_string
 {
-    my $self  = shift;
-    my $today = localtime; 
+    my $self = shift;
     return sprintf("%02d, %s %04d", $self->{dd}, $MONTHS->[$self->{mm}-1], $self->{yyyy});
 }
 
@@ -113,7 +133,7 @@ Return today's date is Sake calendar as list in the format yyyy,mm,dd.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
     my ($yyyy, $mm, $dd) = $saka->today();
     print "Year [$yyyy] Month [$mm] Day [$dd]\n";
@@ -133,7 +153,7 @@ Return name of the given month according to the Saka Calendar.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
     print "Month name: [" . $saka->mon() . "]\n";
 
@@ -156,7 +176,7 @@ Get day of the week of the given Saka date, starting with sunday (0).
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
     print "Day of the week; [" . $saka->dow() . "]\n";
 
@@ -168,13 +188,13 @@ sub dow
     my $yyyy = shift;
     my $mm   = shift;
     my $dd   = shift;
-    
+
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
     $dd   = $self->{dd}   unless defined $dd;
-    
+
     _validate_date($yyyy, $mm, $dd);
-    
+
     my @gregorian = $self->to_gregorian($yyyy, $mm, $dd);
     return Day_of_Week(@gregorian);
 }
@@ -185,11 +205,11 @@ Return number of days in the given year and month of Saka calendar.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,12,26);
     print "Days is Phalguna 1932: [" . $saka->days_in_year_month() . "]\n";
 
-    print "Days is Caitra 1932: [" . $saka->days_in_year_month(1932,1) . "]\n";
+    print "Days is Chaitra 1932: [" . $saka->days_in_year_month(1932,1) . "]\n";
 
 =cut
 
@@ -201,9 +221,9 @@ sub days_in_year_month
 
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
-    
+
     _validate_date($yyyy, $mm, 1);
-    
+
     my (@start, @end);
     @start = $self->to_gregorian($yyyy, $mm, 1);
     if ($mm == 12)
@@ -216,7 +236,7 @@ sub days_in_year_month
         $mm += 1;
     }
     @end = $self->to_gregorian($yyyy, $mm, 1);
-    
+
     return Delta_Days(@start, @end);
 }
 
@@ -226,7 +246,7 @@ Add no_of_days to the Sake date.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,12,5);
     print "Saka 1:" . $saka->as_string() . "\n";
     $saka->add_days(5);
@@ -240,14 +260,14 @@ sub add_days
     my $no_of_days = shift;
     croak("ERROR: Invalid day count.\n")
         unless ($no_of_days =~ /^\-?\d+$/);
-    
+
     my ($yyyy, $mm, $dd) = $self->to_gregorian();
     ($yyyy, $mm, $dd) = Add_Delta_Days($yyyy, $mm, $dd, $no_of_days);
     ($yyyy, $mm, $dd) = $self->from_gregorian($yyyy, $mm, $dd);
     $self->{yyyy} = $yyyy;
     $self->{mm}   = $mm;
     $self->{dd}   = $dd;
-    
+
     return;
 }
 
@@ -257,7 +277,7 @@ Minus no_of_days from the Sake date.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,12,5);
     print "Saka 1:" . $saka->as_string() . "\n";
     $saka->minus_days(2);
@@ -271,7 +291,7 @@ sub minus_days
     my $no_of_days = shift;
     croak("ERROR: Invalid day count.\n")
         unless ($no_of_days =~ /^\d+$/);
-    
+
     return $self->add_days(-1 * $no_of_days);
 }
 
@@ -281,7 +301,7 @@ Add no_of_months to the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,1,1);
     print "Saka 1:" . $saka->as_string() . "\n";
     $saka->add_months(2);
@@ -298,16 +318,16 @@ sub add_months
 
     if (($self->{mm}+$no_of_months) > 12)
     {
-        while (($self->{mm}+$no_of_months) > 12)
+        while (($self->{mm} + $no_of_months) > 12)
         {
             my $_mm = 12 - $self->{mm};
             $self->{yyyy}++;
             $self->{mm} = 1;
             $no_of_months = $no_of_months - ($_mm + 1);
         }
-    }    
+    }
     $self->{mm} += $no_of_months;
-    
+
     return;
 }
 
@@ -317,7 +337,7 @@ Mnus no_of_months from the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,5,1);
     print "Saka 1:" . $saka->as_string() . "\n";
     $saka->minus_months(2);
@@ -341,9 +361,9 @@ sub minus_months
             $no_of_months = $no_of_months - $self->{mm};
             $self->{mm} = 12;
         }
-    }    
+    }
     $self->{mm} -= $no_of_months;
-    
+
     return;
 }
 
@@ -353,7 +373,7 @@ Add no_of_years to the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,1,1);
     print "Saka 1:" . $saka->as_string() . "\n";
     $saka->add_years(2);
@@ -369,7 +389,7 @@ sub add_years
         unless ($no_of_years =~ /^\d+$/);
 
     $self->{yyyy} += $no_of_years;
-    
+
     return;
 }
 
@@ -379,7 +399,7 @@ Minus no_of_years from the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,1,1);
     print "Saka 1:" . $saka->as_string() . "\n";
     $saka->minus_years(2);
@@ -395,7 +415,7 @@ sub minus_years
         unless ($no_of_years =~ /^\d+$/);
 
     $self->{yyyy} -= $no_of_years;
-    
+
     return;
 }
 
@@ -406,10 +426,10 @@ calendar if no argument is passed in.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new(1932,1,1);
     print $saka->get_calendar();
-    
+
     # Print calendar for year 1932 and month 12.
     print $saka->get_calendar(1932, 12);
 
@@ -420,17 +440,18 @@ sub get_calendar
     my $self = shift;
     my $yyyy = shift;    
     my $mm   = shift;
-    
-       $yyyy = $self->{yyyy} unless defined $yyyy;
-    $mm   = $self->{mm}   unless defined $mm;
-    
+
+    $yyyy = $self->{yyyy} unless defined $yyyy;
+    $mm   = $self->{mm} unless defined $mm;
+
     _validate_date($yyyy, $mm, 1);
-    
-    my $calendar = sprintf("\n\t%s [%04d]\n", $MONTHS->[$mm-1],$yyyy);
+
+    my ($calendar, $start_index, $days);
+    $calendar = sprintf("\n\t%s [%04d]\n", $MONTHS->[$mm-1], $yyyy);
     $calendar .= "\nSun  Mon  Tue  Wed  Thu  Fri  Sat\n";
-    
-    my $start_index = $self->dow($yyyy, $mm, 1);
-    my $days = $self->days_in_year_month($yyyy, $mm);
+
+    $start_index = $self->dow($yyyy, $mm, 1);
+    $days = $self->days_in_year_month($yyyy, $mm);
     map { $calendar .= "     " } (1..($start_index%=7));
     foreach (1 .. $days) 
     {
@@ -446,7 +467,7 @@ Convert Saka date to Gregorian date and return a list in the format yyyy,mm,dd.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
     print "Saka: " . $saka->as_string() . "\n";
     my ($yyyy, $mm, $dd) = $saka->to_gregorian();
@@ -464,9 +485,9 @@ sub to_gregorian
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
     $dd   = $self->{dd}   unless defined $dd;
-    
+
     _validate_date($yyyy, $mm, $dd);
-    
+
     return _julian_to_gregorian($self->to_julian($yyyy, $mm, $dd));
 }
 
@@ -476,7 +497,7 @@ Convert Gregorian date to Saka date and return a list in the format yyyy,mm,dd.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
     print "Saka 1: " . $saka->as_string() . "\n";
     my ($yyyy, $mm, $dd) = $saka->from_gregorian(2011, 3, 17);
@@ -492,7 +513,7 @@ sub from_gregorian
     my $dd   = shift;
 
     _validate_date($yyyy, $mm, $dd);
-    
+
     return $self->from_julian(_gregorian_to_julian($yyyy, $mm, $dd));
 }
 
@@ -502,13 +523,13 @@ Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
-    print "Saka: " . $saka->as_string() . "\n";
-    print "Julian: " . $saka->to_julian() ."\n";
+    print "Saka  : " . $saka->as_string() . "\n";
+    print "Julian: " . $saka->to_julian() . "\n";
 
 =cut
-    
+
 sub to_julian
 {
     my $self = shift;
@@ -519,23 +540,23 @@ sub to_julian
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
     $dd   = $self->{dd}   unless defined $dd;
-    
+
     _validate_date($yyyy, $mm, $dd);
-    
+
     my ($gyear, $gday, $start, $julian);
     $gyear = $yyyy + 78;
     $gday  = (_is_leap($gyear)) ? (21) : (22);
     $start = _gregorian_to_julian($gyear, 3, $gday);
-    
-    if ($mm == 1) 
+
+    if ($mm == 1)
     {
         $julian = $start + ($dd - 1);
     } 
     else 
     {
-        my ($caitra, $_mm);
-        $caitra = (_is_leap($gyear)) ? (31) : (30);
-        $julian = $start + $caitra;
+        my ($chaitra, $_mm);
+        $chaitra = (_is_leap($gyear)) ? (31) : (30);
+        $julian = $start + $chaitra;
         $_mm = $mm - 2;
         $_mm = min($_mm, 5);
         $julian += $_mm * 31;
@@ -557,7 +578,7 @@ Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $saka = Calendar::Saka->new();
     print "Saka 1: " . $saka->as_string() . "\n";
     my $julian = $saka->to_julian();
@@ -572,34 +593,34 @@ sub from_julian
     my $julian = shift;
 
     my ($day, $month, $year);    
-    my ($caitra, $yyyy, $yday, $mday);
+    my ($chaitra, $yyyy, $yday, $mday);
     $julian = floor($julian) + 0.5;
     $yyyy   = (_julian_to_gregorian($julian))[0];
     $yday   = $julian - _gregorian_to_julian($yyyy, 1, 1);     
-    $caitra = _days_in_caitra($yyyy);
+    $chaitra = _days_in_chaitra($yyyy);
     $year   = $yyyy - $SAKA;  
-    
+
     if ($yday < $START) 
     {
         $year--;
-        $yday += $caitra + (31 * 5) + (30 * 3) + 10 + $START;
+        $yday += $chaitra + (31 * 5) + (30 * 3) + 10 + $START;
     }
 
     $yday -= $START;
-    if ($yday < $caitra) 
+    if ($yday < $chaitra) 
     {
         $month = 1;
         $day   = $yday + 1;
-    } 
+    }
     else 
     {
-        $mday = $yday - $caitra;
+        $mday = $yday - $chaitra;
         if ($mday < (31 * 5)) 
         {
             $month = floor($mday / 31) + 2;
             $day   = ($mday % 31) + 1;
-        } 
-        else 
+        }
+        else
         {
             $mday -= 31 * 5;
             $month = floor($mday / 30) + 7;
@@ -615,7 +636,7 @@ sub _gregorian_to_julian
     my $yyyy = shift;
     my $mm   = shift;
     my $dd   = shift;
-    
+
     return ($GREGORIAN_EPOCH - 1) +
            (365 * ($yyyy - 1)) +
            floor(($yyyy - 1) / 4) +
@@ -629,7 +650,7 @@ sub _gregorian_to_julian
 sub _julian_to_gregorian
 {
     my $julian = shift;
-    
+
     my $wjd        = floor($julian - 0.5) + 0.5;
     my $depoch     = $wjd - $GREGORIAN_EPOCH;
     my $quadricent = floor($depoch / 146097);
@@ -640,9 +661,9 @@ sub _julian_to_gregorian
     my $dquad      = $dcent % 1461;
     my $yindex     = floor($dquad / 365);
     my $year       = ($quadricent * 400) + ($cent * 100) + ($quad * 4) + $yindex;
-    
+
     $year++ unless (($cent == 4) || ($yindex == 4));
-    
+
     my $yearday = $wjd - _gregorian_to_julian($year, 1, 1);
     my $leapadj = (($wjd < _gregorian_to_julian($year, 3, 1)) ? 0 : ((_is_leap($year) ? 1 : 2)));
     my $month   = floor(((($yearday + $leapadj) * 12) + 373) / 367);
@@ -654,12 +675,12 @@ sub _julian_to_gregorian
 sub _is_leap
 {
     my $yyyy = shift;
-    
+
     return (($yyyy % 4) == 0) &&
             (!((($yyyy % 100) == 0) && (($yyyy % 400) != 0)));
 }
 
-sub _days_in_caitra
+sub _days_in_chaitra
 {
     my $yyyy = shift;
 
@@ -671,12 +692,12 @@ sub _validate_date
     my $yyyy = shift;
     my $mm   = shift;
     my $dd   = shift;
-    
-    croak("ERROR: Invalid year [$yyyy].\n") 
+
+    croak("ERROR: Invalid year [$yyyy].\n")
         unless (defined($yyyy) && ($yyyy =~ /^\d{4}$/) && ($yyyy > 0));
-    croak("ERROR: Invalid month number [$mm].\n") 
+    croak("ERROR: Invalid month number [$mm].\n")
         unless (defined($mm) && ($mm =~ /^\d{1,2}$/) && ($mm >= 1 || $mm <= 12));
-    croak("ERROR: Invalid day number [$dd].\n") 
+    croak("ERROR: Invalid day number [$dd].\n")
         unless (defined($dd) && ($dd =~ /^\d{1,2}$/) && ($dd >= 1 || $mm <= 31));
 }
 
