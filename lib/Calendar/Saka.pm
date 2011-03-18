@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Saka Calendar (Indian).
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Carp;
 use Readonly;
@@ -85,9 +85,8 @@ from  the  first  day  after  the new moon and ending on the full moon day const
 or 'bright half' of the month; the period beginning from the day after the full moon until and including
 the next new moon day constitutes the krishna paksha or 'dark half' of the month.
 
-The  "year zero"  for the two calendars is different. In the Vikrama calendar, the zero year corresponds
-to 58 BCE, while in the Shalivahana calendar, it corresponds to 78 CE. The Saka calendar begins with the
-month of Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year. 
+The  "year zero"  corresponds to 78 BCE in the Saka calendar. The Saka calendar begins with the month of 
+Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year. 
 
 Each month in the Shalivahana calendar begins with the 'bright half' and is followed by the 'dark half'.
 Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the new month begins on the

@@ -1,5 +1,8 @@
 Revision history for Calendar-Saka
 
+0.03    Fri Mar 18 14:15:16 2011
+        - Corrected typo in the SYNOPSIS.
+
 0.02    Fri Mar 18 12:29:00 2011
         - Renamed month "Caitra" to "Chaitra".
         - Updated SYNOPSIS to tell more about Saka Calendar.
