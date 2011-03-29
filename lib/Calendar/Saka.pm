@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Saka Calendar (Indian).
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Carp;
 use Readonly;
@@ -97,6 +97,8 @@ This official calendar follows the Shalivahan Shak calendar in beginning from  t
 counting  years  with  78 CE being year zero. It features a constant number of days in every month (with
 leap years).
 
+=head2 Saka Calendar for the month of Phalgun year 1932.
+
             Phalguna [1932]
 
     Sun  Mon  Tue  Wed  Thu  Fri  Sat
@@ -105,6 +107,33 @@ leap years).
      15   16   17   18   19   20   21
      22   23   24   25   26   27   28
      29   30
+
+=head2 Months Names
+
+    Order    Name
+    1        Chaitra
+    2        Vaisakha
+    3        Jyaistha
+    4        Asadha
+    5        Sravana
+    6        Bhadra
+    7        Asvina
+    8        Kartika
+    9        Agrahayana
+    10       Pausa
+    11       Magha
+    12       Phalguna
+
+=head2 Weekdays
+
+    Weekday  Gregorian  Saka
+    0        Sunday     Ravivara
+    1        Monday     Somvara
+    2        Tuesday    Mangalavara
+    3        Wednesday  Budhavara
+    4        Thursday   Brahaspativara
+    5        Friday     Sukravara
+    6        Saturday   Sanivara
 
 =head1 METHODS
 
@@ -115,8 +144,8 @@ Return Saka date in human readable format.
     use strict; use warnings;
     use Calendar::Saka;
     
-    my $saka = Calendar::Saka->new(1932,12,26);
-    print "Saka date is " . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,12,26);
+    print "Saka date is " . $calendar->as_string() . "\n";
 
 =cut
 
@@ -133,8 +162,8 @@ Return today's date is Sake calendar as list in the format yyyy,mm,dd.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    my ($yyyy, $mm, $dd) = $saka->today();
+    my $calendar = Calendar::Saka->new();
+    my ($yyyy, $mm, $dd) = $calendar->today();
     print "Year [$yyyy] Month [$mm] Day [$dd]\n";
 
 =cut
@@ -153,8 +182,8 @@ Return name of the given month according to the Saka Calendar.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    print "Month name: [" . $saka->mon() . "]\n";
+    my $calendar = Calendar::Saka->new();
+    print "Month name: [" . $calendar->mon() . "]\n";
 
 =cut
 
@@ -176,8 +205,8 @@ Get day of the week of the given Saka date, starting with sunday (0).
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    print "Day of the week; [" . $saka->dow() . "]\n";
+    my $calendar = Calendar::Saka->new();
+    print "Day of the week; [" . $calendar->dow() . "]\n";
 
 =cut
 
@@ -205,10 +234,10 @@ Return number of days in the given year and month of Saka calendar.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,12,26);
-    print "Days is Phalguna 1932: [" . $saka->days_in_year_month() . "]\n";
+    my $calendar = Calendar::Saka->new(1932,12,26);
+    print "Days is Phalguna 1932: [" . $calendar->days_in_year_month() . "]\n";
 
-    print "Days is Chaitra 1932: [" . $saka->days_in_year_month(1932,1) . "]\n";
+    print "Days is Chaitra 1932: [" . $calendar->days_in_year_month(1932,1) . "]\n";
 
 =cut
 
@@ -246,10 +275,10 @@ Add no_of_days to the Sake date.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,12,5);
-    print "Saka 1:" . $saka->as_string() . "\n";
-    $saka->add_days(5);
-    print "Saka 2:" . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,12,5);
+    print "Saka 1:" . $calendar->as_string() . "\n";
+    $calendar->add_days(5);
+    print "Saka 2:" . $calendar->as_string() . "\n";
 
 =cut
 
@@ -277,10 +306,10 @@ Minus no_of_days from the Sake date.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,12,5);
-    print "Saka 1:" . $saka->as_string() . "\n";
-    $saka->minus_days(2);
-    print "Saka 2:" . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,12,5);
+    print "Saka 1:" . $calendar->as_string() . "\n";
+    $calendar->minus_days(2);
+    print "Saka 2:" . $calendar->as_string() . "\n";
 
 =cut
 
@@ -301,10 +330,10 @@ Add no_of_months to the Saka date.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,1,1);
-    print "Saka 1:" . $saka->as_string() . "\n";
-    $saka->add_months(2);
-    print "Saka 2:" . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,1,1);
+    print "Saka 1:" . $calendar->as_string() . "\n";
+    $calendar->add_months(2);
+    print "Saka 2:" . $calendar->as_string() . "\n";
 
 =cut
 
@@ -337,10 +366,10 @@ Mnus no_of_months from the Saka date.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,5,1);
-    print "Saka 1:" . $saka->as_string() . "\n";
-    $saka->minus_months(2);
-    print "Saka 2:" . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,5,1);
+    print "Saka 1:" . $calendar->as_string() . "\n";
+    $calendar->minus_months(2);
+    print "Saka 2:" . $calendar->as_string() . "\n";
 
 =cut
 
@@ -373,10 +402,10 @@ Add no_of_years to the Saka date.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,1,1);
-    print "Saka 1:" . $saka->as_string() . "\n";
-    $saka->add_years(2);
-    print "Saka 2:" . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,1,1);
+    print "Saka 1:" . $calendar->as_string() . "\n";
+    $calendar->add_years(2);
+    print "Saka 2:" . $calendar->as_string() . "\n";
 
 =cut
 
@@ -399,10 +428,10 @@ Minus no_of_years from the Saka date.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,1,1);
-    print "Saka 1:" . $saka->as_string() . "\n";
-    $saka->minus_years(2);
-    print "Saka 2:" . $saka->as_string() . "\n";
+    my $calendar = Calendar::Saka->new(1932,1,1);
+    print "Saka 1:" . $calendar->as_string() . "\n";
+    $calendar->minus_years(2);
+    print "Saka 2:" . $calendar->as_string() . "\n";
 
 =cut
 
@@ -426,11 +455,11 @@ calendar if no argument is passed in.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new(1932,1,1);
-    print $saka->get_calendar();
+    my $calendar = Calendar::Saka->new(1932,1,1);
+    print $calendar->get_calendar();
 
     # Print calendar for year 1932 and month 12.
-    print $saka->get_calendar(1932, 12);
+    print $calendar->get_calendar(1932, 12);
 
 =cut
 
@@ -467,9 +496,9 @@ Convert Saka date to Gregorian date and return a list in the format yyyy,mm,dd.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    print "Saka: " . $saka->as_string() . "\n";
-    my ($yyyy, $mm, $dd) = $saka->to_gregorian();
+    my $calendar = Calendar::Saka->new();
+    print "Saka: " . $calendar->as_string() . "\n";
+    my ($yyyy, $mm, $dd) = $calendar->to_gregorian();
     print "Gregorian [$yyyy] Month [$mm] Day [$dd]\n";
 
 =cut
@@ -497,9 +526,9 @@ Convert Gregorian date to Saka date and return a list in the format yyyy,mm,dd.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    print "Saka 1: " . $saka->as_string() . "\n";
-    my ($yyyy, $mm, $dd) = $saka->from_gregorian(2011, 3, 17);
+    my $calendar = Calendar::Saka->new();
+    print "Saka 1: " . $calendar->as_string() . "\n";
+    my ($yyyy, $mm, $dd) = $calendar->from_gregorian(2011, 3, 17);
     print "Saka 2: Year[$yyyy] Month [$mm] Day [$dd]\n";
 
 =cut
@@ -523,9 +552,9 @@ Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    print "Saka  : " . $saka->as_string() . "\n";
-    print "Julian: " . $saka->to_julian() . "\n";
+    my $calendar = Calendar::Saka->new();
+    print "Saka  : " . $calendar->as_string() . "\n";
+    print "Julian: " . $calendar->to_julian() . "\n";
 
 =cut
 
@@ -578,10 +607,10 @@ Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
     use strict; use warnings;
     use Calendar::Saka;
 
-    my $saka = Calendar::Saka->new();
-    print "Saka 1: " . $saka->as_string() . "\n";
-    my $julian = $saka->to_julian();
-    my ($yyyy, $mm, $dd) = $saka->from_julian($julian);
+    my $calendar = Calendar::Saka->new();
+    print "Saka 1: " . $calendar->as_string() . "\n";
+    my $julian = $calendar->to_julian();
+    my ($yyyy, $mm, $dd) = $calendar->from_julian($julian);
     print "Saka 2: Year[$yyyy] Month [$mm] Day [$dd]\n";
 
 =cut
