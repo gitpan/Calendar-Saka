@@ -1,5 +1,9 @@
 Revision history for Calendar-Saka
 
+0.05    Tue Apr 12 12:05:00 2011
+        - Fixed buggy internal method _validate_date().
+        - Added unit test 05-test-case.t
+
 0.04    Tue Mar 29 10:53:10 2011
         - Added more information about the month name and weekdays of Saka calendar.
 
