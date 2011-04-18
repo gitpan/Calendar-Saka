@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Saka Calendar (Indian).
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Carp;
 use Readonly;
@@ -74,30 +74,29 @@ sub new
 
 =head1 SYNOPSIS
 
-Module to play with Saka calendar mostly used in the South indian, Goa and Maharashatra. It supports the
-functionality  to  add / minus days, months  and years to a Saka date. It can also converts Saka date to
- Gregorian/Julian date.
+Module  to  play  with Saka calendar mostly used in the South indian, Goa and Maharashatra. It 
+supports the functionality  to add / minus days, months  and years to a Saka date. It can also 
+converts Saka date to Gregorian/Julian date.
 
-The  Saka  eras  are  lunisolar  calendars, and feature annual cycles of twelve lunar months, each month
-divided  into  two  phases:  the  'bright half' (shukla) and the 'dark half' (krishna); these correspond
-respectively  to  the  periods  of the 'waxing' and the 'waning' of the moon. Thus, the period beginning
-from  the  first  day  after  the new moon and ending on the full moon day constitutes the shukla paksha
-or 'bright half' of the month; the period beginning from the day after the full moon until and including
-the next new moon day constitutes the krishna paksha or 'dark half' of the month.
+The  Saka eras are lunisolar calendars, and feature annual cycles of twelve lunar months, each 
+month divided   into  two  phases:  the  'bright half' (shukla) and the 'dark half' (krishna); 
+these correspond respectively  to  the  periods  of the 'waxing' and the 'waning' of the moon. 
+Thus, the  period  beginning from  the  first  day  after  the new moon and ending on the full 
+moon day constitutes the shukla paksha or 'bright half' of the month the period beginning from 
+the  day after the full moon until and including the next new moon day constitutes the krishna 
+paksha or 'dark half' of the month.
 
-The  "year zero"  corresponds to 78 BCE in the Saka calendar. The Saka calendar begins with the month of 
-Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year. 
+The  "year zero"  corresponds to 78 BCE in the Saka calendar.The Saka calendar begins with the 
+month of Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year. 
 
-Each month in the Shalivahana calendar begins with the 'bright half' and is followed by the 'dark half'.
-Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the new month begins on the
-day after that.
+Each  month  in  the Shalivahana calendar begins with the 'bright half' and is followed by the 
+'dark half'.  Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the 
+new month begins on the day after that.
 
-A variant  of  the  Saka Calendar was reformed and standardized as the Indian National calendar in 1957.
-This official calendar follows the Shalivahan Shak calendar in beginning from  the  month of Chaitra and
-counting  years  with  78 CE being year zero. It features a constant number of days in every month (with
-leap years).
-
-=head2 Saka Calendar for the month of Phalgun year 1932.
+A variant of  the  Saka Calendar was reformed and standardized as the Indian National calendar 
+in 1957.  This  official  calendar follows the Shalivahan Shak calendar in beginning from  the  
+month  of  Chaitra  and  counting   years  with  78 CE being year zero. It features a constant 
+number of days in every month with leap years.Saka Calendar for the month of Phalgun year 1932.
 
             Phalguna [1932]
 
@@ -108,32 +107,38 @@ leap years).
      22   23   24   25   26   27   28
      29   30
 
-=head2 Months Names
+=head1 MONTHS
 
-    Order    Name
-    1        Chaitra
-    2        Vaisakha
-    3        Jyaistha
-    4        Asadha
-    5        Sravana
-    6        Bhadra
-    7        Asvina
-    8        Kartika
-    9        Agrahayana
-    10       Pausa
-    11       Magha
-    12       Phalguna
+    +-------+------------+ 
+    | Order | Name       |
+    +-------+------------+ 
+    |   1   | Chaitra    |
+    |   2   | Vaisakha   |
+    |   3   | Jyaistha   |
+    |   4   | Asadha     |
+    |   5   | Sravana    | 
+    |   6   | Bhadra     |
+    |   7   | Asvina     |
+    |   8   | Kartika    |
+    |   9   | Agrahayana |
+    |  10   | Pausa      |
+    |  11   | Magha      |
+    |  12   | Phalguna   |
+    +-------+------------+ 
 
-=head2 Weekdays
-
-    Weekday  Gregorian  Saka
-    0        Sunday     Ravivara
-    1        Monday     Somvara
-    2        Tuesday    Mangalavara
-    3        Wednesday  Budhavara
-    4        Thursday   Brahaspativara
-    5        Friday     Sukravara
-    6        Saturday   Sanivara
+=head1 WEEKDAYS
+     
+    +---------+-----------+----------------+
+    | Weekday | Gregorian | Saka           | 
+    +---------+-----------+----------------+ 
+    |    0    | Sunday    | Ravivara       |
+    |    1    | Monday    | Somvara        |
+    |    2    | Tuesday   | Mangalavara    |
+    |    3    | Wednesday | Budhavara      |
+    |    4    | Thursday  | Brahaspativara |
+    |    5    | Friday    | Sukravara      |
+    |    6    | Saturday  | Sanivara       |
+    +---------+-----------+----------------+
 
 =head1 METHODS
 
@@ -175,7 +180,7 @@ sub today
     return $self->from_gregorian($today->year+1900, $today->mon+1, $today->mday);
 }
 
-=head2 mon(mm)
+=head2 mon()
 
 Return name of the given month according to the Saka Calendar.
 
@@ -198,7 +203,7 @@ sub mon
     return $MONTHS->[$mm-1];
 }
 
-=head2 dow(yyyy, mm, dd)
+=head2 dow()
 
 Get day of the week of the given Saka date, starting with sunday (0).
 
@@ -227,7 +232,7 @@ sub dow
     return Day_of_Week(@gregorian);
 }
 
-=head2 days_in_year_month(yyyy, mm)
+=head2 days_in_year_month()
 
 Return number of days in the given year and month of Saka calendar.
 
@@ -268,7 +273,7 @@ sub days_in_year_month
     return Delta_Days(@start, @end);
 }
 
-=head2 add_days(no_of_days)
+=head2 add_days()
 
 Add no_of_days to the Sake date.
 
@@ -299,7 +304,7 @@ sub add_days
     return;
 }
 
-=head2 minus_days(no_of_days)
+=head2 minus_days()
 
 Minus no_of_days from the Sake date.
 
@@ -323,7 +328,7 @@ sub minus_days
     return $self->add_days(-1 * $no_of_days);
 }
 
-=head2 add_months(no_of_months)
+=head2 add_months()
 
 Add no_of_months to the Saka date.
 
@@ -359,7 +364,7 @@ sub add_months
     return;
 }
 
-=head2 minus_months(no_of_months)
+=head2 minus_months()
 
 Mnus no_of_months from the Saka date.
 
@@ -395,7 +400,7 @@ sub minus_months
     return;
 }
 
-=head2 add_years(no_of_years)
+=head2 add_years()
 
 Add no_of_years to the Saka date.
 
@@ -421,7 +426,7 @@ sub add_years
     return;
 }
 
-=head2 minus_years(no_of_years)
+=head2 minus_years()
 
 Minus no_of_years from the Saka date.
 
@@ -447,9 +452,9 @@ sub minus_years
     return;
 }
 
-=head2 get_calendar(yyyy, mm)
+=head2 get_calendar()
 
-Return calendar for given year and month in Saka calendar. It return current month of Saka
+Return  calendar  for  given  year and month in Saka calendar. It return current month of Saka
 calendar if no argument is passed in.
 
     use strict; use warnings;
@@ -489,7 +494,7 @@ sub get_calendar
     return sprintf("%s\n\n", $calendar);
 }
 
-=head2 to_gregorian(yyyy, mm, dd)
+=head2 to_gregorian()
 
 Convert Saka date to Gregorian date and return a list in the format yyyy,mm,dd.
 
@@ -519,7 +524,7 @@ sub to_gregorian
     return _julian_to_gregorian($self->to_julian($yyyy, $mm, $dd));
 }
 
-=head2 from_gregorian(yyyy, mm, dd)
+=head2 from_gregorian()
 
 Convert Gregorian date to Saka date and return a list in the format yyyy,mm,dd.
 
@@ -545,7 +550,7 @@ sub from_gregorian
     return $self->from_julian(_gregorian_to_julian($yyyy, $mm, $dd));
 }
 
-=head2 to_julian(yyyy, mm, dd)
+=head2 to_julian()
 
 Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
 
@@ -735,9 +740,9 @@ Mohammad S Anwar, C<< <mohammad.anwar at yahoo.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-calendar-saka at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Calendar-Saka>.  
-I will be notified, and then you'll automatically be notified of progress on your bug as I make changes.
+Please  report any bugs or feature requests to C<bug-calendar-saka at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Calendar-Saka>.I will be 
+notified, and then you'll automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
@@ -769,7 +774,8 @@ L<http://search.cpan.org/dist/Calendar-Saka/>
 
 =head1 ACKNOWLEDGEMENTS
 
-This module is based on javascript code written by John Walker founder of Autodesk, Inc. and co-author of AutoCAD.
+This module is based on javascript code written by John Walker founder of Autodesk, Inc. and 
+co-author of AutoCAD.
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -783,7 +789,8 @@ See http://dev.perl.org/licenses/ for more information.
 
 =head1 DISCLAIMER
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+This  program  is  distributed  in  the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 =cut
 

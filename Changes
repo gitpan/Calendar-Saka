@@ -1,5 +1,10 @@
 Revision history for Calendar-Saka
 
+0.06    Mon Apr 18 16:54:00 2011
+        - Renamed title "Month Names" to "MONTHS" and set it head1.
+        - Removed title "Saka Calendar for the month of Phalgun year 1932.".
+        - Cosmetics changes.
+
 0.05    Tue Apr 12 12:05:00 2011
         - Fixed buggy internal method _validate_date().
         - Added unit test 05-test-case.t
