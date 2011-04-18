@@ -1,5 +1,5 @@
 ---
-abstract: 'Interface to Saka Calendar (Indian).'
+abstract: 'Interface to Indian Calendar.'
 author:
   - 'Mohammad S Anwar <mohammad.anwar@yahoo.com>'
 build_requires:
@@ -19,7 +19,7 @@ name: Calendar-Saka
 provides:
   Calendar::Saka:
     file: lib/Calendar/Saka.pm
-    version: 0.06
+    version: 0.07
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.06
+version: 0.07

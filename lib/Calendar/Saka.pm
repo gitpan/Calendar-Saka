@@ -4,15 +4,15 @@ use strict; use warnings;
 
 =head1 NAME
 
-Calendar::Saka - Interface to Saka Calendar (Indian).
+Calendar::Saka - Interface to Indian Calendar.
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use Readonly;
@@ -232,7 +232,7 @@ sub dow
     return Day_of_Week(@gregorian);
 }
 
-=head2 days_in_year_month()
+=head2 days_in_month()
 
 Return number of days in the given year and month of Saka calendar.
 
@@ -240,13 +240,12 @@ Return number of days in the given year and month of Saka calendar.
     use Calendar::Saka;
 
     my $calendar = Calendar::Saka->new(1932,12,26);
-    print "Days is Phalguna 1932: [" . $calendar->days_in_year_month() . "]\n";
-
-    print "Days is Chaitra 1932: [" . $calendar->days_in_year_month(1932,1) . "]\n";
+    print "Days is Phalguna 1932: [" . $calendar->days_in_month() . "]\n";
+    print "Days is Chaitra  1932: [" . $calendar->days_in_month(1932,1) . "]\n";
 
 =cut
 
-sub days_in_year_month
+sub days_in_month
 {
     my $self = shift;
     my $yyyy = shift;
@@ -484,7 +483,7 @@ sub get_calendar
     $calendar .= "\nSun  Mon  Tue  Wed  Thu  Fri  Sat\n";
 
     $start_index = $self->dow($yyyy, $mm, 1);
-    $days = $self->days_in_year_month($yyyy, $mm);
+    $days = $self->days_in_month($yyyy, $mm);
     map { $calendar .= "     " } (1..($start_index%=7));
     foreach (1 .. $days) 
     {
