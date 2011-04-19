@@ -1,5 +1,8 @@
 Revision history for Calendar-Saka
 
+0.08    Tue Apr 19 09:36:29 2011
+        - Renamed tilte "SYNOPSIS" to "DESCRIPTION".
+
 0.07    Mon Apr 18 17:22:11 2011
         - Updated description.
         - Renamed method days_in_year_month() to days_in_month().

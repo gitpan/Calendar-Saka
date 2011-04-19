@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Indian Calendar.
 
 =head1 VERSION
 
-Version 0.07
+Version 0.08
 
 =cut
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Carp;
 use Readonly;
@@ -72,31 +72,31 @@ sub new
     return $self;
 }
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
-Module  to  play  with Saka calendar mostly used in the South indian, Goa and Maharashatra. It 
-supports the functionality  to add / minus days, months  and years to a Saka date. It can also 
+Module  to  play  with Saka calendar mostly used in the South indian, Goa and Maharashatra. It
+supports the functionality  to add / minus days, months  and years to a Saka date. It can also
 converts Saka date to Gregorian/Julian date.
 
-The  Saka eras are lunisolar calendars, and feature annual cycles of twelve lunar months, each 
-month divided   into  two  phases:  the  'bright half' (shukla) and the 'dark half' (krishna); 
-these correspond respectively  to  the  periods  of the 'waxing' and the 'waning' of the moon. 
-Thus, the  period  beginning from  the  first  day  after  the new moon and ending on the full 
-moon day constitutes the shukla paksha or 'bright half' of the month the period beginning from 
-the  day after the full moon until and including the next new moon day constitutes the krishna 
+The  Saka eras are lunisolar calendars, and feature annual cycles of twelve lunar months, each
+month divided   into  two  phases:  the  'bright half' (shukla) and the 'dark half' (krishna);
+these correspond respectively  to  the  periods  of the 'waxing' and the 'waning' of the moon.
+Thus, the  period  beginning from  the  first  day  after  the new moon and ending on the full
+moon day constitutes the shukla paksha or 'bright half' of the month the period beginning from
+the  day after the full moon until and including the next new moon day constitutes the krishna
 paksha or 'dark half' of the month.
 
-The  "year zero"  corresponds to 78 BCE in the Saka calendar.The Saka calendar begins with the 
-month of Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year. 
+The  "year zero"  corresponds to 78 BCE in the Saka calendar.The Saka calendar begins with the
+month of Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year.
 
-Each  month  in  the Shalivahana calendar begins with the 'bright half' and is followed by the 
-'dark half'.  Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the 
+Each  month  in  the Shalivahana calendar begins with the 'bright half' and is followed by the
+'dark half'.  Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the
 new month begins on the day after that.
 
-A variant of  the  Saka Calendar was reformed and standardized as the Indian National calendar 
-in 1957.  This  official  calendar follows the Shalivahan Shak calendar in beginning from  the  
-month  of  Chaitra  and  counting   years  with  78 CE being year zero. It features a constant 
-number of days in every month with leap years.Saka Calendar for the month of Phalgun year 1932.
+A variant of  the  Saka Calendar was reformed and standardized as the Indian National calendar
+in 1957.  This  official  calendar follows the Shalivahan Shak calendar in beginning from  the
+month  of  Chaitra  and  counting   years  with  78 CE being year zero. It features a constant
+number of days in every month with leap years.Saka Calendar for the month of Phalgun year 1932
 
             Phalguna [1932]
 
@@ -109,14 +109,14 @@ number of days in every month with leap years.Saka Calendar for the month of Pha
 
 =head1 MONTHS
 
-    +-------+------------+ 
+    +-------+------------+
     | Order | Name       |
-    +-------+------------+ 
+    +-------+------------+
     |   1   | Chaitra    |
     |   2   | Vaisakha   |
     |   3   | Jyaistha   |
     |   4   | Asadha     |
-    |   5   | Sravana    | 
+    |   5   | Sravana    |
     |   6   | Bhadra     |
     |   7   | Asvina     |
     |   8   | Kartika    |
@@ -124,13 +124,13 @@ number of days in every month with leap years.Saka Calendar for the month of Pha
     |  10   | Pausa      |
     |  11   | Magha      |
     |  12   | Phalguna   |
-    +-------+------------+ 
+    +-------+------------+
 
 =head1 WEEKDAYS
-     
+
     +---------+-----------+----------------+
-    | Weekday | Gregorian | Saka           | 
-    +---------+-----------+----------------+ 
+    | Weekday | Gregorian | Saka           |
+    +---------+-----------+----------------+
     |    0    | Sunday    | Ravivara       |
     |    1    | Monday    | Somvara        |
     |    2    | Tuesday   | Mangalavara    |
@@ -148,7 +148,7 @@ Return Saka date in human readable format.
 
     use strict; use warnings;
     use Calendar::Saka;
-    
+
     my $calendar = Calendar::Saka->new(1932,12,26);
     print "Saka date is " . $calendar->as_string() . "\n";
 
@@ -197,9 +197,9 @@ sub mon
     my $self = shift;
     my $mm   = shift;
     $mm = $self->{mm} unless defined $mm;
-    
+
     _validate_date(2000, $mm, 1);
-    
+
     return $MONTHS->[$mm-1];
 }
 
@@ -583,8 +583,8 @@ sub to_julian
     if ($mm == 1)
     {
         $julian = $start + ($dd - 1);
-    } 
-    else 
+    }
+    else
     {
         my ($chaitra, $_mm);
         $chaitra = (_is_leap($gyear)) ? (31) : (30);
@@ -592,8 +592,8 @@ sub to_julian
         $_mm = $mm - 2;
         $_mm = min($_mm, 5);
         $julian += $_mm * 31;
-        
-        if ($mm >= 8) 
+
+        if ($mm >= 8)
         {
             $_mm     = $mm - 7;
             $julian += $_mm * 30;
@@ -624,13 +624,13 @@ sub from_julian
     my $self   = shift;
     my $julian = shift;
 
-    my ($day, $month, $year);    
+    my ($day, $month, $year);
     my ($chaitra, $yyyy, $yday, $mday);
     $julian = floor($julian) + 0.5;
     $yyyy   = (_julian_to_gregorian($julian))[0];
-    $yday   = $julian - _gregorian_to_julian($yyyy, 1, 1);     
+    $yday   = $julian - _gregorian_to_julian($yyyy, 1, 1);
     $chaitra = _days_in_chaitra($yyyy);
-    $year   = $yyyy - $SAKA;  
+    $year   = $yyyy - $SAKA;
 
     if ($yday < $START) 
     {
@@ -639,7 +639,7 @@ sub from_julian
     }
 
     $yday -= $START;
-    if ($yday < $chaitra) 
+    if ($yday < $chaitra)
     {
         $month = 1;
         $day   = $yday + 1;
@@ -740,7 +740,7 @@ Mohammad S Anwar, C<< <mohammad.anwar at yahoo.com> >>
 =head1 BUGS
 
 Please  report any bugs or feature requests to C<bug-calendar-saka at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Calendar-Saka>.I will be 
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Calendar-Saka>.I will be
 notified, and then you'll automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
@@ -773,7 +773,7 @@ L<http://search.cpan.org/dist/Calendar-Saka/>
 
 =head1 ACKNOWLEDGEMENTS
 
-This module is based on javascript code written by John Walker founder of Autodesk, Inc. and 
+This module is based on javascript code written by John Walker founder of Autodesk, Inc. and
 co-author of AutoCAD.
 
 =head1 LICENSE AND COPYRIGHT
@@ -788,7 +788,7 @@ See http://dev.perl.org/licenses/ for more information.
 
 =head1 DISCLAIMER
 
-This  program  is  distributed  in  the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+This  program  is  distributed  in  the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 =cut
