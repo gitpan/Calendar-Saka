@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Indian Calendar.
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Carp;
 use Readonly;
@@ -274,7 +274,7 @@ sub days_in_month
 
 =head2 add_days()
 
-Add no_of_days to the Sake date.
+Add given number of days to the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -305,7 +305,7 @@ sub add_days
 
 =head2 minus_days()
 
-Minus no_of_days from the Sake date.
+Minus given number of days from the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -329,7 +329,7 @@ sub minus_days
 
 =head2 add_months()
 
-Add no_of_months to the Saka date.
+Add given number of months to the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -365,7 +365,7 @@ sub add_months
 
 =head2 minus_months()
 
-Mnus no_of_months from the Saka date.
+Minus given number of months from the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -401,7 +401,7 @@ sub minus_months
 
 =head2 add_years()
 
-Add no_of_years to the Saka date.
+Add given number of years to the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -427,7 +427,7 @@ sub add_years
 
 =head2 minus_years()
 
-Minus no_of_years from the Saka date.
+Minus given number of years from the Saka date.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -453,7 +453,7 @@ sub minus_years
 
 =head2 get_calendar()
 
-Return  calendar  for  given  year and month in Saka calendar. It return current month of Saka
+Return calendar for the given year and month in Saka calendar. It return current month of Saka
 calendar if no argument is passed in.
 
     use strict; use warnings;

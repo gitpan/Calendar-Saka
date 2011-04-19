@@ -1,5 +1,8 @@
 Revision history for Calendar-Saka
 
+0.09    Tue Apr 19 10:42:55 2011
+        - Fixed the typo in the pod.
+
 0.08    Tue Apr 19 09:36:29 2011
         - Renamed tilte "SYNOPSIS" to "DESCRIPTION".
 
