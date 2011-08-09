@@ -5,7 +5,7 @@ author:
 build_requires:
   Date::Calc: 5.7
   List::Util: 1.21
-  Readonly: 0
+  Readonly: 1.03
   Test::More: 0
   Time::localtime: 1.02
 configure_requires:
@@ -19,7 +19,7 @@ name: Calendar-Saka
 provides:
   Calendar::Saka:
     file: lib/Calendar/Saka.pm
-    version: 0.09
+    version: 1.10
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.09
+version: 1.10

@@ -8,11 +8,11 @@ Calendar::Saka - Interface to Indian Calendar.
 
 =head1 VERSION
 
-Version 0.09
+Version 1.10
 
 =cut
 
-our $VERSION = '0.09';
+our $VERSION = '1.10';
 
 use Carp;
 use Readonly;

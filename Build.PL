@@ -10,10 +10,10 @@ my $builder = Module::Build->new(
     add_to_cleanup    => [ 'Calendar-Saka-*' ],
     build_requires    => {
         'Test::More'      => 0,
-        'Readonly'        => 0,
-        'Time::localtime' => 1.02,
-        'List::Util'      => 1.21,
-        'Date::Calc'      => 5.7,
+        'Readonly'        => '1.03',
+        'Time::localtime' => '1.02',
+        'List::Util'      => '1.21',
+        'Date::Calc'      => '5.7',
     },
 );
 

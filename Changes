@@ -1,5 +1,9 @@
 Revision history for Calendar-Saka
 
+1.10    Tue Aug 09 16:32:11 2011
+        - Made Readonly v1.03 as minimum requirement.
+        - Prepared the distribution using the Module::Signature v0.68.
+
 0.09    Tue Apr 19 10:42:55 2011
         - Fixed the typo in the pod.
 
