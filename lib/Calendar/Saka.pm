@@ -1,5 +1,7 @@
 package Calendar::Saka;
 
+$Calendar::Saka::VERSION = '1.11';
+
 use strict; use warnings;
 
 =head1 NAME
@@ -8,60 +10,46 @@ Calendar::Saka - Interface to Indian Calendar.
 
 =head1 VERSION
 
-Version 1.10
+Version 1.11
 
 =cut
 
-our $VERSION = '1.10';
-
-use Carp;
-use Readonly;
 use Data::Dumper;
 use POSIX qw/floor/;
 use Time::localtime;
 use List::Util qw/min/;
 use Date::Calc qw/Delta_Days Day_of_Week Add_Delta_Days/;
 
-Readonly my $MONTHS =>
-[
+my $MONTHS = [
     'Chaitra', 'Vaisakha', 'Jyaistha',   'Asadha', 'Sravana', 'Bhadra',
-    'Asvina',  'Kartika',  'Agrahayana', 'Pausa',  'Magha',   'Phalguna'
-];
+    'Asvina',  'Kartika',  'Agrahayana', 'Pausa',  'Magha',   'Phalguna' ];
 
-Readonly my $DAYS => 
-[
+my $DAYS = [
     'Ravivara',       'Somvara',   'Mangalavara', 'Budhavara',
-    'Brahaspativara', 'Sukravara', 'Sanivara'    
-];
+    'Brahaspativara', 'Sukravara', 'Sanivara' ];
 
 # Day offset between Saka and Gregorian.
-Readonly my $START => 80;
+my $START = 80;
 
 # Offset in years from Saka era to Gregorian epoch.
-Readonly my $SAKA => 78;
+my $SAKA = 78;
 
-Readonly my $GREGORIAN_EPOCH => 1721425.5;
+my $GREGORIAN_EPOCH = 1721425.5;
 
-sub new 
-{
-    my $class = shift;
-    my $yyyy  = shift;
-    my $mm    = shift;
-    my $dd    = shift;
-    
+sub new {
+    my ($class, $yyyy, $mm, $dd) = @_;
+
     my $self  = {};
     bless $self, $class;
-    
-    if (defined($yyyy) && defined($mm) && defined($dd))
-    {
+
+    if (defined($yyyy) && defined($mm) && defined($dd)) {
         _validate_date($yyyy, $mm, $dd)
     }
-    else
-    {
-        my $today = localtime; 
+    else {
+        my $today = localtime;
         $yyyy = ($today->year+1900) unless defined $yyyy;
         $mm = ($today->mon+1) unless defined $mm;
-        $dd = $today->mday unless defined $dd;    
+        $dd = $today->mday unless defined $dd;
         ($yyyy, $mm, $dd) = $self->from_gregorian($yyyy, $mm, $dd);
     }
 
@@ -74,29 +62,32 @@ sub new
 
 =head1 DESCRIPTION
 
-Module  to  play  with Saka calendar mostly used in the South indian, Goa and Maharashatra. It
-supports the functionality  to add / minus days, months  and years to a Saka date. It can also
-converts Saka date to Gregorian/Julian date.
+Module  to  play  with Saka calendar  mostly  used  in  the South indian, Goa and
+Maharashatra. It supports the functionality to add / minus days, months and years
+to a Saka date. It can also converts Saka date to Gregorian/Julian date.
 
-The  Saka eras are lunisolar calendars, and feature annual cycles of twelve lunar months, each
-month divided   into  two  phases:  the  'bright half' (shukla) and the 'dark half' (krishna);
-these correspond respectively  to  the  periods  of the 'waxing' and the 'waning' of the moon.
-Thus, the  period  beginning from  the  first  day  after  the new moon and ending on the full
-moon day constitutes the shukla paksha or 'bright half' of the month the period beginning from
-the  day after the full moon until and including the next new moon day constitutes the krishna
-paksha or 'dark half' of the month.
+The  Saka eras are lunisolar calendars, and feature annual cycles of twelve lunar
+months, each month divided into two phases:   the  'bright half' (shukla) and the
+'dark half'  (krishna);  these correspond  respectively  to  the  periods  of the
+'waxing' and the 'waning' of the moon. Thus, the  period beginning from the first
+day  after  the new moon  and  ending on the full moon day constitutes the shukla
+paksha or 'bright half' of the month the period beginning from the  day after the
+full moon until &  including the next new moon day constitutes the krishna paksha
+or 'dark half' of the month.
 
-The  "year zero"  corresponds to 78 BCE in the Saka calendar.The Saka calendar begins with the
-month of Chaitra (March) and the Ugadi/Gudi Padwa festivals mark the new year.
+The  "year zero"  corresponds  to  78 BCE in the Saka calendar. The Saka calendar
+begins with the month of Chaitra (March) and the Ugadi/Gudi Padwa festivals  mark
+the new year.
 
-Each  month  in  the Shalivahana calendar begins with the 'bright half' and is followed by the
-'dark half'.  Thus,  each  month of the Shalivahana calendar ends with the no-moon day and the
-new month begins on the day after that.
+Each  month  in  the Shalivahana  calendar  begins with the  'bright half' and is
+followed by the 'dark half'.  Thus,  each  month of the Shalivahana calendar ends
+with the no-moon day and the new month begins on the day after that.
 
-A variant of  the  Saka Calendar was reformed and standardized as the Indian National calendar
-in 1957.  This  official  calendar follows the Shalivahan Shak calendar in beginning from  the
-month  of  Chaitra  and  counting   years  with  78 CE being year zero. It features a constant
-number of days in every month with leap years.Saka Calendar for the month of Phalgun year 1932
+A variant of the Saka Calendar was reformed & standardized as the Indian National
+calendar in 1957. This official  calendar follows the Shalivahan Shak calendar in
+beginning from the month of Chaitra and counting years with 78 CE being year zero.
+It features a constant number of days in every month with leap years.Saka Calendar
+for the month of Phalgun year 1932
 
             Phalguna [1932]
 
@@ -154,9 +145,9 @@ Return Saka date in human readable format.
 
 =cut
 
-sub as_string
-{
-    my $self = shift;
+sub as_string {
+    my ($self) = @_;
+
     return sprintf("%02d, %s %04d", $self->{dd}, $MONTHS->[$self->{mm}-1], $self->{yyyy});
 }
 
@@ -173,10 +164,10 @@ Return today's date is Sake calendar as list in the format yyyy,mm,dd.
 
 =cut
 
-sub today
-{
-    my $self  = shift;
-    my $today = localtime; 
+sub today {
+    my ($self) = @_;
+
+    my $today = localtime;
     return $self->from_gregorian($today->year+1900, $today->mon+1, $today->mday);
 }
 
@@ -192,10 +183,9 @@ Return name of the given month according to the Saka Calendar.
 
 =cut
 
-sub mon
-{
-    my $self = shift;
-    my $mm   = shift;
+sub mon {
+    my ($self, $mm) = @_;
+
     $mm = $self->{mm} unless defined $mm;
 
     _validate_date(2000, $mm, 1);
@@ -215,12 +205,8 @@ Get day of the week of the given Saka date, starting with sunday (0).
 
 =cut
 
-sub dow
-{
-    my $self = shift;
-    my $yyyy = shift;
-    my $mm   = shift;
-    my $dd   = shift;
+sub dow {
+    my ($self, $yyyy, $mm, $dd) = @_;
 
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
@@ -245,11 +231,8 @@ Return number of days in the given year and month of Saka calendar.
 
 =cut
 
-sub days_in_month
-{
-    my $self = shift;
-    my $yyyy = shift;
-    my $mm   = shift;
+sub days_in_month {
+    my ($self, $yyyy, $mm) = @_;
 
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
@@ -258,15 +241,14 @@ sub days_in_month
 
     my (@start, @end);
     @start = $self->to_gregorian($yyyy, $mm, 1);
-    if ($mm == 12)
-    {
+    if ($mm == 12) {
         $yyyy += 1;
         $mm    = 1;
     }
-    else
-    {
+    else {
         $mm += 1;
     }
+
     @end = $self->to_gregorian($yyyy, $mm, 1);
 
     return Delta_Days(@start, @end);
@@ -286,12 +268,10 @@ Add given number of days to the Saka date.
 
 =cut
 
-sub add_days
-{
-    my $self = shift;
-    my $no_of_days = shift;
-    croak("ERROR: Invalid day count.\n")
-        unless ($no_of_days =~ /^\-?\d+$/);
+sub add_days {
+    my ($self, $no_of_days) = @_;
+
+    die("ERROR: Invalid day count.\n") unless ($no_of_days =~ /^\-?\d+$/);
 
     my ($yyyy, $mm, $dd) = $self->to_gregorian();
     ($yyyy, $mm, $dd) = Add_Delta_Days($yyyy, $mm, $dd, $no_of_days);
@@ -317,12 +297,10 @@ Minus given number of days from the Saka date.
 
 =cut
 
-sub minus_days
-{
-    my $self = shift;
-    my $no_of_days = shift;
-    croak("ERROR: Invalid day count.\n")
-        unless ($no_of_days =~ /^\d+$/);
+sub minus_days {
+    my ($self, $no_of_days) = @_;
+
+    die("ERROR: Invalid day count.\n") unless ($no_of_days =~ /^\d+$/);
 
     return $self->add_days(-1 * $no_of_days);
 }
@@ -341,17 +319,13 @@ Add given number of months to the Saka date.
 
 =cut
 
-sub add_months
-{
-    my $self = shift;
-    my $no_of_months = shift;
-    croak("ERROR: Invalid month count.\n")
-        unless ($no_of_months =~ /^\d+$/);
+sub add_months {
+    my ($self, $no_of_months) = @_;
 
-    if (($self->{mm}+$no_of_months) > 12)
-    {
-        while (($self->{mm} + $no_of_months) > 12)
-        {
+    die("ERROR: Invalid month count.\n") unless ($no_of_months =~ /^\d+$/);
+
+    if (($self->{mm}+$no_of_months) > 12) {
+        while (($self->{mm} + $no_of_months) > 12) {
             my $_mm = 12 - $self->{mm};
             $self->{yyyy}++;
             $self->{mm} = 1;
@@ -377,17 +351,13 @@ Minus given number of months from the Saka date.
 
 =cut
 
-sub minus_months
-{
-    my $self = shift;
-    my $no_of_months = shift;
-    croak("ERROR: Invalid month count.\n")
-        unless ($no_of_months =~ /^\d+$/);
+sub minus_months {
+    my ($self, $no_of_months) = @_;
 
-    if (($self->{mm}-$no_of_months) < 1)
-    {
-        while (($self->{mm}-$no_of_months) < 1)
-        {
+    die("ERROR: Invalid month count.\n") unless ($no_of_months =~ /^\d+$/);
+
+    if (($self->{mm}-$no_of_months) < 1) {
+        while (($self->{mm}-$no_of_months) < 1) {
             my $_mm = $no_of_months - $self->{mm};
             $self->{yyyy}--;
             $no_of_months = $no_of_months - $self->{mm};
@@ -413,12 +383,10 @@ Add given number of years to the Saka date.
 
 =cut
 
-sub add_years
-{
-    my $self = shift;
-    my $no_of_years = shift;
-    croak("ERROR: Invalid year count.\n")
-        unless ($no_of_years =~ /^\d+$/);
+sub add_years {
+    my ($self, $no_of_years) = @_;
+
+    die("ERROR: Invalid year count.\n") unless ($no_of_years =~ /^\d+$/);
 
     $self->{yyyy} += $no_of_years;
 
@@ -439,12 +407,10 @@ Minus given number of years from the Saka date.
 
 =cut
 
-sub minus_years
-{
-    my $self = shift;
-    my $no_of_years = shift;
-    croak("ERROR: Invalid year count.\n")
-        unless ($no_of_years =~ /^\d+$/);
+sub minus_years {
+    my ($self, $no_of_years) = @_;
+
+    die("ERROR: Invalid year count.\n") unless ($no_of_years =~ /^\d+$/);
 
     $self->{yyyy} -= $no_of_years;
 
@@ -453,8 +419,8 @@ sub minus_years
 
 =head2 get_calendar()
 
-Return calendar for the given year and month in Saka calendar. It return current month of Saka
-calendar if no argument is passed in.
+Return calendar for the given year and month in Saka calendar. It  return current
+month of Saka calendar if no argument is passed in.
 
     use strict; use warnings;
     use Calendar::Saka;
@@ -467,11 +433,8 @@ calendar if no argument is passed in.
 
 =cut
 
-sub get_calendar
-{
-    my $self = shift;
-    my $yyyy = shift;    
-    my $mm   = shift;
+sub get_calendar {
+    my ($self, $yyyy, $mm) = @_;
 
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm} unless defined $mm;
@@ -485,11 +448,11 @@ sub get_calendar
     $start_index = $self->dow($yyyy, $mm, 1);
     $days = $self->days_in_month($yyyy, $mm);
     map { $calendar .= "     " } (1..($start_index%=7));
-    foreach (1 .. $days) 
-    {
+    foreach (1 .. $days) {
         $calendar .= sprintf("%3d  ", $_);
         $calendar .= "\n" unless (($start_index+$_)%7);
     }
+
     return sprintf("%s\n\n", $calendar);
 }
 
@@ -507,12 +470,8 @@ Convert Saka date to Gregorian date and return a list in the format yyyy,mm,dd.
 
 =cut
 
-sub to_gregorian
-{
-    my $self = shift;
-    my $yyyy = shift;
-    my $mm   = shift;
-    my $dd   = shift;
+sub to_gregorian {
+    my ($self, $yyyy, $mm, $dd) = @_;
 
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
@@ -537,12 +496,8 @@ Convert Gregorian date to Saka date and return a list in the format yyyy,mm,dd.
 
 =cut
 
-sub from_gregorian
-{
-    my $self = shift;
-    my $yyyy = shift;
-    my $mm   = shift;
-    my $dd   = shift;
+sub from_gregorian {
+    my ($self, $yyyy, $mm, $dd) = @_;
 
     _validate_date($yyyy, $mm, $dd);
 
@@ -562,12 +517,8 @@ Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
 
 =cut
 
-sub to_julian
-{
-    my $self = shift;
-    my $yyyy = shift;
-    my $mm   = shift;
-    my $dd   = shift;
+sub to_julian {
+    my ($self, $yyyy, $mm, $dd) = @_;
 
     $yyyy = $self->{yyyy} unless defined $yyyy;
     $mm   = $self->{mm}   unless defined $mm;
@@ -580,12 +531,10 @@ sub to_julian
     $gday  = (_is_leap($gyear)) ? (21) : (22);
     $start = _gregorian_to_julian($gyear, 3, $gday);
 
-    if ($mm == 1)
-    {
+    if ($mm == 1) {
         $julian = $start + ($dd - 1);
     }
-    else
-    {
+    else {
         my ($chaitra, $_mm);
         $chaitra = (_is_leap($gyear)) ? (31) : (30);
         $julian = $start + $chaitra;
@@ -593,8 +542,7 @@ sub to_julian
         $_mm = min($_mm, 5);
         $julian += $_mm * 31;
 
-        if ($mm >= 8)
-        {
+        if ($mm >= 8) {
             $_mm     = $mm - 7;
             $julian += $_mm * 30;
         }
@@ -619,10 +567,8 @@ Convert Julian date to Saka date and return a list in the format yyyy,mm,dd.
 
 =cut
 
-sub from_julian
-{
-    my $self   = shift;
-    my $julian = shift;
+sub from_julian {
+    my ($self, $julian) = @_;
 
     my ($day, $month, $year);
     my ($chaitra, $yyyy, $yday, $mday);
@@ -632,28 +578,23 @@ sub from_julian
     $chaitra = _days_in_chaitra($yyyy);
     $year   = $yyyy - $SAKA;
 
-    if ($yday < $START) 
-    {
+    if ($yday < $START) {
         $year--;
         $yday += $chaitra + (31 * 5) + (30 * 3) + 10 + $START;
     }
 
     $yday -= $START;
-    if ($yday < $chaitra)
-    {
+    if ($yday < $chaitra) {
         $month = 1;
         $day   = $yday + 1;
     }
-    else 
-    {
+    else {
         $mday = $yday - $chaitra;
-        if ($mday < (31 * 5)) 
-        {
+        if ($mday < (31 * 5)) {
             $month = floor($mday / 31) + 2;
             $day   = ($mday % 31) + 1;
         }
-        else
-        {
+        else {
             $mday -= 31 * 5;
             $month = floor($mday / 30) + 7;
             $day   = ($mday % 30) + 1;
@@ -663,11 +604,8 @@ sub from_julian
     return ($year, $month, $day);
 }
 
-sub _gregorian_to_julian
-{
-    my $yyyy = shift;
-    my $mm   = shift;
-    my $dd   = shift;
+sub _gregorian_to_julian {
+    my ($yyyy, $mm, $dd) = @_;
 
     return ($GREGORIAN_EPOCH - 1) +
            (365 * ($yyyy - 1)) +
@@ -676,12 +614,11 @@ sub _gregorian_to_julian
            floor(($yyyy - 1) / 400) +
            floor((((367 * $mm) - 362) / 12) +
            (($mm <= 2) ? 0 : (_is_leap($yyyy) ? -1 : -2)) +
-           $dd);
+                 $dd);
 }
 
-sub _julian_to_gregorian
-{
-    my $julian = shift;
+sub _julian_to_gregorian {
+    my ($julian) = @_;
 
     my $wjd        = floor($julian - 0.5) + 0.5;
     my $depoch     = $wjd - $GREGORIAN_EPOCH;
@@ -704,32 +641,27 @@ sub _julian_to_gregorian
     return ($year, $month, $day);
 }
 
-sub _is_leap
-{
-    my $yyyy = shift;
+sub _is_leap {
+    my ($yyyy) = @_;
 
     return (($yyyy % 4) == 0) &&
-            (!((($yyyy % 100) == 0) && (($yyyy % 400) != 0)));
+        (!((($yyyy % 100) == 0) && (($yyyy % 400) != 0)));
 }
 
-sub _days_in_chaitra
-{
-    my $yyyy = shift;
+sub _days_in_chaitra {
+    my ($yyyy) = @_;
 
     (_is_leap($yyyy)) ? (return 31) : (return 30);
 }
 
-sub _validate_date
-{
-    my $yyyy = shift;
-    my $mm   = shift;
-    my $dd   = shift;
+sub _validate_date {
+    my ($yyyy, $mm, $dd) = @_;
 
-    croak("ERROR: Invalid year [$yyyy].\n")
+    die("ERROR: Invalid year [$yyyy].\n")
         unless (defined($yyyy) && ($yyyy =~ /^\d{4}$/) && ($yyyy > 0));
-    croak("ERROR: Invalid month [$mm].\n")
+    die("ERROR: Invalid month [$mm].\n")
         unless (defined($mm) && ($mm =~ /^\d{1,2}$/) && ($mm >= 1) && ($mm <= 12));
-    croak("ERROR: Invalid day [$dd].\n")
+    die("ERROR: Invalid day [$dd].\n")
         unless (defined($dd) && ($dd =~ /^\d{1,2}$/) && ($dd >= 1) && ($dd <= 31));
 }
 
@@ -737,11 +669,16 @@ sub _validate_date
 
 Mohammad S Anwar, C<< <mohammad.anwar at yahoo.com> >>
 
+=head1 REPOSITORY
+
+L<https://github.com/Manwar/Calendar-Saka>
+
 =head1 BUGS
 
-Please  report any bugs or feature requests to C<bug-calendar-saka at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Calendar-Saka>.I will be
-notified, and then you'll automatically be notified of progress on your bug as I make changes.
+Please  report any bugs or feature requests to C<bug-calendar-saka at rt.cpan.org>,
+or through the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Calendar-Saka>.
+I will be notified, and then you'll automatically be notified of progress on your
+bug as I make changes.
 
 =head1 SUPPORT
 
@@ -773,23 +710,46 @@ L<http://search.cpan.org/dist/Calendar-Saka/>
 
 =head1 ACKNOWLEDGEMENTS
 
-This module is based on javascript code written by John Walker founder of Autodesk, Inc. and
-co-author of AutoCAD.
+This module is based on javascript code written by John Walker founder of Autodesk,
+Inc. and co-author of AutoCAD.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Mohammad S Anwar.
+Copyright 2011 - 2014 Mohammad S Anwar.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
+This  program  is  free software; you can redistribute it and/or modify it under
+the  terms  of the the Artistic License (2.0). You may obtain a copy of the full
+license at:
 
-See http://dev.perl.org/licenses/ for more information.
+L<http://www.perlfoundation.org/artistic_license_2_0>
 
-=head1 DISCLAIMER
+Any  use,  modification, and distribution of the Standard or Modified Versions is
+governed by this Artistic License.By using, modifying or distributing the Package,
+you accept this license. Do not use, modify, or distribute the Package, if you do
+not accept this license.
 
-This  program  is  distributed  in  the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+If your Modified Version has been derived from a Modified Version made by someone
+other than you,you are nevertheless required to ensure that your Modified Version
+ complies with the requirements of this license.
+
+This  license  does  not grant you the right to use any trademark,  service mark,
+tradename, or logo of the Copyright Holder.
+
+This license includes the non-exclusive, worldwide, free-of-charge patent license
+to make,  have made, use,  offer to sell, sell, import and otherwise transfer the
+Package with respect to any patent claims licensable by the Copyright Holder that
+are  necessarily  infringed  by  the  Package. If you institute patent litigation
+(including  a  cross-claim  or  counterclaim) against any party alleging that the
+Package constitutes direct or contributory patent infringement,then this Artistic
+License to you shall terminate on the date that such litigation is filed.
+
+Disclaimer  of  Warranty:  THE  PACKAGE  IS  PROVIDED BY THE COPYRIGHT HOLDER AND
+CONTRIBUTORS  "AS IS'  AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES. THE IMPLIED
+WARRANTIES    OF   MERCHANTABILITY,   FITNESS   FOR   A   PARTICULAR  PURPOSE, OR
+NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY YOUR LOCAL LAW. UNLESS
+REQUIRED BY LAW, NO COPYRIGHT HOLDER OR CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL,  OR CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE
+OF THE PACKAGE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
